@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Language app </title>
+        <link rel="stylesheet" href="style.css"/>
+    </head>
+    <body>
+        <div id="app">
+            <!-- <input
+                type="text"
+                v-model="newLanguage"
+                placeholder="New language"
+            >
+            <button @click="insertLanguage(newLanguage)">
+                Add language
+            </button>
+            
+            <button @click="getLanguages">
+                Mostrar idiomas
+            </button>
+            <ul>
+                <li v-for="language in languages" :key="language.id">
+                    {{ language.name }}
+                </li>
+            </ul> -->
+            <div id="languageViewer">
+                <div v-for="language in languages" class="languagesOption">
+                    <div class="languageName">{{ language.name }}</div>
+                    <div class="deleteLanguage">
+                        <button @click="deleteLanguage(language.id)">
+                            X
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="script.js"></script>
+</html>
