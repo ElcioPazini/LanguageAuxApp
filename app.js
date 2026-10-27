@@ -15,6 +15,12 @@ const server = http.createServer((req, res) => {
         handlePostLanguage(res, req);
     } else if (req.method === 'DELETE' && req.url.startsWith('/languages/')) {
         handleDeleteLanguage(res, req);
+    }else if (req.method === 'GET' && req.url.startsWith('/words/')) {
+        handleGetWordsByLangId(res, req);
+    }else if (req.method === 'POST' && req.url === '/words') {
+        handlePostWord(res, req);
+    }else if (req.method === 'DELETE' && req.url.startsWith('/words/')) {
+        handleDeleteWord(res, req);
     } else {
         res.statusCode = 404;
         res.end('No route');
@@ -28,6 +34,14 @@ function handleDeleteLanguage(res, req){
     deleteLanguage(languageId);
 
     res.end('Language deleted');
+}
+
+function handleDeleteWord(res, req){
+    const wordId = parseInt(req.url.split('/')[2]);
+
+    deleteWord(wordId);
+
+    res.end('Word deleted');
 }
 
 function handlePostLanguage(res, req){
@@ -45,9 +59,45 @@ function handlePostLanguage(res, req){
     });
 }
 
+function handlePostWord(res, req){
+    let body = '';
+
+    req.on('data', chunk => {
+        body += chunk;
+    });
+
+    req.on('end', () => {
+        const word = JSON.parse(body);
+        const success = insertWord(word.name, word.translation, word.description, word.languageId);
+
+        if (success) {
+            res.end('Word added');
+        } else {
+            res.statusCode = 400;
+            res.end('Word already exists');
+        }
+    });
+}
+
 function handleGetLanguages(res){
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(getLanguages()));
+}
+
+function handleGetWordsByLangId(res, req){
+    res.setHeader('Content-Type', 'application/json');
+
+    const languageId = parseInt(req.url.split('/')[2]);
+    const words = getWords();
+
+    if(!words)
+        return
+    
+    var filteredWordsByLangId = words.filter(function(word){
+        return word.languageId === languageId
+    });
+
+    res.end(JSON.stringify(filteredWordsByLangId));
 }
 
 function getLanguages(){
@@ -56,10 +106,16 @@ function getLanguages(){
     return JSON.parse(languages);
 }
 
+function getWords(){
+    var words = fs.readFileSync('words.json', 'utf-8');
+
+    return JSON.parse(words);
+}
+
 function insertLanguage(name){
     var languages = getLanguages();
     for(i = 1; i < 999; i++){
-        var existingLanguage = genericFilterFunction(languages, 'id', i);
+        var existingLanguage = genericFilterFunction(languages, 'id', i)[0];
 
         if(!existingLanguage){
             var newLang = {
@@ -77,8 +133,36 @@ function insertLanguage(name){
     writeLanguagesToFileAsync(languages)
 }
 
-function genericFilterFunction (array, key, value){
-    return array.filter(obj => obj[key] === value);
+function insertWord(name, translation, description, languageId){
+    var words = getWords();
+
+    var existingWord = words.filter(function(word){
+        return word.languageId === languageId && word.name === name;
+    });
+
+    if(existingWord.length > 0){
+        return false;
+    }
+
+    for(i = 1; i < 9999; i++){
+        existingWord = genericFilterFunction(words, 'id', i)[0];
+        
+        if(!existingWord){
+            var newWord = {
+                "id": i,
+                "name": name,
+                "translation": translation,
+                "description": description,
+                "languageId": languageId
+            };
+
+            words.push(newWord);
+            i = 10000;
+        }
+    }
+
+    writeWordsToFileAsync(words)
+    return true;
 }
 
 function deleteLanguage(languageId){
@@ -89,6 +173,16 @@ function deleteLanguage(languageId){
     languages.splice(languageIndex, 1);
 
     writeLanguagesToFileAsync(languages)
+}
+
+function deleteWord(wordId){
+    var words = getWords();
+
+    var wordIndex = words.indexOf(genericFilterFunction(words, 'id', wordId)[0]);
+
+    words.splice(wordIndex, 1);
+
+    writeWordsToFileAsync(words);
 }
 
 function loadHtml(res){
@@ -113,6 +207,16 @@ function writeLanguagesToFileAsync(languages){
     fs.writeFileSync('languages.json',
         JSON.stringify(languages)
     )
+}
+
+function writeWordsToFileAsync(words){
+    fs.writeFileSync('words.json',
+        JSON.stringify(words)
+    )
+}
+
+function genericFilterFunction (array, key, value){
+    return array.filter(obj => obj[key] === value);
 }
 
 server.listen(3000, () => {

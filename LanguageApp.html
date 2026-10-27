@@ -6,31 +6,89 @@
     </head>
     <body>
         <div id="app">
-            <!-- <input
-                type="text"
-                v-model="newLanguage"
-                placeholder="New language"
-            >
-            <button @click="insertLanguage(newLanguage)">
-                Add language
-            </button>
-            
-            <button @click="getLanguages">
-                Mostrar idiomas
-            </button>
-            <ul>
-                <li v-for="language in languages" :key="language.id">
-                    {{ language.name }}
-                </li>
-            </ul> -->
-            <div id="languageViewer">
-                <div v-for="language in languages" class="languagesOption">
-                    <div class="languageName">{{ language.name }}</div>
-                    <div class="deleteLanguage">
-                        <button @click="deleteLanguage(language.id)">
-                            X
-                        </button>
+            <div class="panel">
+                <div id="languageViewer">
+                    <div
+                        v-for="language in languages"
+                        :key="language.id"
+                        class="languagesOption"
+                        :class="{ selected: selectedLanguageId === language.id }"
+                        @click="selectLanguage(language.id)"
+                    >
+                        <div class="languageName">{{ language.name }}</div>
+                        <!-- <div class="deleteLanguage">
+                            <button @click.stop="deleteLanguage(language.id)">
+                                X
+                            </button>
+                        </div> -->
                     </div>
+                </div>
+                <form
+                    v-if="selectedLanguageId !== null"
+                    class="wordForm"
+                    @submit.prevent="createWord"
+                >
+                    <div class="wordFormFields">
+                        <label>
+                            Word
+                            <input v-model="newWordName" type="text" required />
+                        </label>
+                        <label>
+                            Translation
+                            <input v-model="newWordTranslation" type="text" required />
+                        </label>
+                        <label class="descriptionField">
+                            Description
+                            <input v-model="newWordDescription" type="text" />
+                        </label>
+                        <button type="submit">Add word</button>
+                    </div>
+                    <p v-if="wordError" class="wordFormMessage" role="alert">{{ wordError }}</p>
+                </form>
+            </div>
+
+
+            <div class="panel wordsArea">
+                <header class="wordsHeader">
+                    <label v-if="selectedLanguageId !== null" class="wordSearch">
+                        Search words
+                        <input
+                            v-model="wordSearchTerm"
+                            type="search"
+                            placeholder="Word, translation, or description"
+                        />
+                    </label>
+                    <span>{{ filteredWords.length }} {{ filteredWords.length === 1 ? 'word' : 'words' }}</span>
+                </header>
+                
+                <p v-if="selectedLanguageId === null" class="wordsMessage">
+                    Select a language to view its words.
+                </p>
+                <p v-else-if="words.length === 0" class="wordsMessage">
+                    No words found for this language.
+                </p>
+                <p v-else-if="filteredWords.length === 0" class="wordsMessage">
+                    No words match your search.
+                </p>
+            
+                <div v-else class="wordList">
+                    <article v-for="word in filteredWords" :key="word.id" class="wordItem">
+                        <div class="wordPair">
+                            <h3>{{ word.name }}</h3>
+                            <span>{{ word.translation }}</span>
+                        </div>
+                        <p v-if="word.description" class="wordDescription">
+                            {{ word.description }}
+                        </p>
+                        <button
+                            class="deleteWordButton"
+                            type="button"
+                            :aria-label="`Delete ${word.name}`"
+                            @click="deleteWord(word.id)"
+                        >
+                            Delete
+                        </button>
+                    </article>
                 </div>
             </div>
         </div>

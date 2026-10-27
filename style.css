@@ -1,54 +1,266 @@
-#app {
+:root {
+     font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif;
+     color: #172b3a;
+     background: #f3f6fa;
+}
+ * {
+     box-sizing: border-box;
+}
+ body {
+     margin: 0;
+}
+ #app {
+     max-width: 1120px;
+     margin: 0 auto;
+     padding: 44px 24px 80px;
+}
+ .appHeading {
+     margin-bottom: 26px;
+}
+ .eyebrow {
+     margin: 0 0 7px;
+     color: #13856d;
+     font-size: 12px;
+     font-weight: 800;
+     letter-spacing: .13em;
+     text-transform: uppercase;
+}
+ .appHeading h1 {
+     margin: 0;
+     font-size: clamp(28px, 4vw, 40px);
+     letter-spacing: -.04em;
+}
+ .appHeading p:last-child {
+     margin: 8px 0 0;
+     color: #6d7c8b;
+}
+ .panel {
+     background: white;
+     border: 1px solid #e3eaf0;
+     border-radius: 18px;
+     box-shadow: 0 8px 28px rgba(26,49,68,.04);
+     margin-bottom: 20px;
+}
+ .languagePanel {
+     padding: 24px;
+     margin-bottom: 20px;
+}
+ .sectionLabel {
+     display: block;
+     margin: 0 0 14px;
+     font-size: 13px;
+     font-weight: 750;
+     color: #627383;
+     text-transform: uppercase;
+     letter-spacing: .08em;
+}
+ #languageViewer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
     width: 100%;
+    margin-top: 12px;
 }
-
-#languageViewer {
-    width: 80%;
-    height: 60px;
-    margin: 0 auto;
-    background-color: #ddffd3;
+ .languagesOption {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     gap: 12px;
+     padding: 12px 20px;
+     border: 1px solid #dce5ed;
+     border-radius: 12px;
+     background: #f8fafc;
+     cursor: pointer;
+     transition: .2s ease;
+     font-weight: 650;
 }
-
-.languagesOption {
-    float: left;
-    height: 80%;
-    width: 200px;
-    margin-right: 5px;
-    margin-left: 5px;
-    margin-top: 7px;
-    font-size: 30px;
-    background-color: whitesmoke;
-    border-radius: 20px;
+ .languagesOption:hover {
+     border-color: #91c9bb;
+     background: #eef8f5;
 }
-
-.languagesOption:hover{
-    cursor:pointer;
-    background-color: gainsboro;
+ .languagesOption.selected {
+     background: #e3f6ef;
+     border-color: #1a9b7d;
+     color: #08755c;
+     box-shadow: inset 0 0 0 1px #1a9b7d;
 }
-
-.languageName {
-    float: left;
-    height: 100%;
-    margin-right: 10px;
-    margin-left: 10px;
-    padding-top: 6px;
+ .languagesOption:focus-visible {
+     outline: 3px solid #9bcfc1;
+     outline-offset: 2px;
 }
-
-.deleteLanguage{
-    float: right;
-    height: 100%;
-    margin-right: 5px;
-    padding-top: 0px;
+ .deleteLanguage button {
+     border: 0;
+     border-radius: 6px;
+     background: #ffe8e8;
+     color: #a52d2d;
+     cursor: pointer;
 }
-
-.deleteLanguage button{
-    background-color: rgb(255, 142, 142);
-    height: 20px;
-    border: 0;
-    border-radius: 15px;
+ #wordsFromLanguage {
+     display: grid;
+     gap: 20px;
 }
-
-.deleteLanguage button:hover{
-    cursor:pointer;
-    background-color: rgb(255, 90, 90);
+ .wordForm {
+     padding: 10px 26px 26px 26px;
+}
+ .wordForm h3, .wordsHeader h2 {
+     margin: 0;
+     font-size: 21px;
+     letter-spacing: -.02em;
+}
+ .sectionSubtitle {
+     margin: 7px 0 23px;
+     font-size: 14px;
+     color: #748391;
+}
+ .wordFormFields {
+     display: grid;
+     grid-template-columns: repeat(3, minmax(0,1fr)) auto;
+     gap: 14px;
+     align-items: end;
+}
+ .wordFormFields label, .wordSearch {
+     display: grid;
+     gap: 8px;
+     color: #415565;
+     font-size: 13px;
+     font-weight: 650;
+}
+ .wordFormFields input, .wordSearch input {
+     width: 100%;
+     min-height: 44px;
+     padding: 10px 13px;
+     border: 1px solid #d9e2e9;
+     border-radius: 9px;
+     background: #fbfcfe;
+     color: #1b3140;
+     font: inherit;
+     font-weight: 400;
+     outline: none;
+}
+ .wordFormFields input:focus, .wordSearch input:focus {
+     border-color: #179b7b;
+     box-shadow: 0 0 0 3px #dff5ed;
+}
+ .wordFormFields button {
+     min-height: 44px;
+     padding: 10px 18px;
+     border: none;
+     border-radius: 9px;
+     background: #138b70;
+     color: white;
+     font: inherit;
+     font-size: 14px;
+     font-weight: 700;
+     cursor: pointer;
+     white-space: nowrap;
+}
+ .wordFormFields button:hover {
+     background: #0c7059;
+}
+ .wordFormMessage {
+     color: #b23a3a;
+     font-size: 13px;
+}
+ .wordsArea {
+     padding: 26px;
+}
+ .wordsHeader {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     gap: 14px;
+     margin-bottom: 22px;
+}
+ .wordsHeader span {
+     padding: 6px 11px;
+     border-radius: 20px;
+     background: #edf4f6;
+     color: #607583;
+     font-size: 12px;
+     font-weight: 750;
+}
+ .wordSearch {
+     width: 70%;
+}
+ .wordList {
+     display: grid;
+     grid-template-columns: repeat(2, minmax(0, 1fr));
+     gap: 16px;
+}
+ .wordItem {
+     min-width: 0;
+     padding: 20px;
+     border: 1px solid #e3eaf0;
+     border-radius: 12px;
+     background: #fcfdff;
+     transition: transform .2s, box-shadow .2s;
+}
+ .wordItem:hover {
+     transform: translateY(-2px);
+     box-shadow: 0 6px 20px rgba(20,48,68,.07);
+}
+ .wordPair {
+     display: grid;
+     gap: 7px;
+}
+ .wordPair h3 {
+     margin: 0;
+     font-size: 19px;
+     overflow-wrap: anywhere;
+}
+ .wordPair span {
+     color: #16866e;
+     font-size: 15px;
+     font-weight: 650;
+     overflow-wrap: anywhere;
+}
+ .wordDescription {
+     margin: 13px 0 0;
+     color: #71818e;
+     font-size: 13px;
+     line-height: 1.55;
+     overflow-wrap: anywhere;
+}
+ .deleteWordButton {
+     margin-top: 18px;
+     padding: 7px 10px;
+     border: 1px solid #f0d7d7;
+     border-radius: 7px;
+     background: #fff8f8;
+     color: #b04b4b;
+     font-size: 12px;
+     font-weight: 650;
+     cursor: pointer;
+}
+ .deleteWordButton:hover {
+     background: #ffeaea;
+}
+ .wordsMessage {
+     margin: 12px 0;
+     color: #71818e;
+}
+ @media (max-width: 850px) {
+     .wordFormFields {
+         grid-template-columns: repeat(2, minmax(0,1fr));
+    }
+}
+ @media (max-width: 550px) {
+     #app {
+         padding: 25px 14px 50px;
+    }
+     .languagePanel, .wordForm, .wordsArea {
+         padding: 18px;
+    }
+     .wordFormFields {
+         grid-template-columns: 1fr;
+    }
+     .wordFormFields button {
+         width: 100%;
+    }
+     .languagesOption {
+         flex: 1 1 auto;
+         justify-content: center;
+    }
 }
