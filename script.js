@@ -25,7 +25,7 @@ const app = Vue.createApp({
             }
 
             return this.words.filter(word => {
-                return [word.name, word.translation]
+                return [word.name, word.translation, word.description]
                     .some(value => String(value || '').toLocaleLowerCase().includes(searchTerm));
             });
         }
