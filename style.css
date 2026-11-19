@@ -181,6 +181,128 @@
      font-size: 12px;
      font-weight: 750;
 }
+ .wordsHeaderActions {
+     display: flex;
+     align-items: center;
+     gap: 10px;
+}
+ .practiceButton, .practiceNextButton {
+     min-height: 38px;
+     padding: 9px 15px;
+     border: 0;
+     border-radius: 9px;
+     background: #138b70;
+     color: white;
+     font: inherit;
+     font-size: 13px;
+     font-weight: 700;
+     cursor: pointer;
+}
+ .practiceButton:hover, .practiceNextButton:hover {
+     background: #0c7059;
+}
+ .practiceButton:disabled {
+     opacity: .5;
+     cursor: not-allowed;
+}
+ .practiceOverlay {
+     position: fixed;
+     inset: 0;
+     z-index: 10;
+     display: grid;
+     place-items: center;
+     padding: 20px;
+     background: rgba(15, 32, 43, .56);
+}
+ .practiceModal {
+     width: min(100%, 520px);
+     padding: 28px;
+     border: 1px solid #e3eaf0;
+     border-radius: 18px;
+     background: white;
+     box-shadow: 0 24px 70px rgba(15, 32, 43, .24);
+}
+ .practiceHeader {
+     display: flex;
+     justify-content: space-between;
+     align-items: flex-start;
+     gap: 14px;
+}
+ .practiceHeader .eyebrow {
+     margin-bottom: 6px;
+}
+ .practiceHeader h2 {
+     margin: 0;
+     font-size: 22px;
+}
+ .practiceCloseButton {
+     width: 36px;
+     height: 36px;
+     border: 1px solid #e3eaf0;
+     border-radius: 9px;
+     background: #f8fafc;
+     color: #415565;
+     font-size: 24px;
+     line-height: 1;
+     cursor: pointer;
+}
+ .practicePrompt {
+     margin: 26px 0 18px;
+     color: #172b3a;
+     font-size: 26px;
+     font-weight: 750;
+     text-align: center;
+     overflow-wrap: anywhere;
+}
+ .practiceOptions {
+     display: grid;
+     gap: 10px;
+}
+ .practiceOption {
+     min-height: 48px;
+     padding: 12px 16px;
+     border: 1px solid #dce5ed;
+     border-radius: 10px;
+     background: #f8fafc;
+     color: #263d4c;
+     font: inherit;
+     font-weight: 650;
+     cursor: pointer;
+     text-align: left;
+     overflow-wrap: anywhere;
+}
+ .practiceOption:hover:not(:disabled) {
+     border-color: #91c9bb;
+     background: #eef8f5;
+}
+ .practiceOption.correct {
+     border-color: #1a9b7d;
+     background: #e3f6ef;
+     color: #08755c;
+}
+ .practiceOption.incorrect {
+     border-color: #d97777;
+     background: #fff0f0;
+     color: #a52d2d;
+}
+ .practiceOption:disabled {
+     cursor: default;
+}
+ .practiceFeedback {
+     margin: 16px 0 0;
+     font-size: 14px;
+     font-weight: 650;
+}
+ .practiceFeedback.success {
+     color: #08755c;
+}
+ .practiceFeedback.retry {
+     color: #a52d2d;
+}
+ .practiceNextButton {
+     width: 100%;
+     margin-top: 16px;
+}
  .wordSearch {
      width: 70%;
 }
@@ -262,5 +384,15 @@
      .languagesOption {
          flex: 1 1 auto;
          justify-content: center;
+    }
+     .wordsHeader {
+         align-items: flex-start;
+         flex-direction: column;
+    }
+     .wordSearch {
+         width: 100%;
+    }
+     .practiceModal {
+         padding: 22px;
     }
 }

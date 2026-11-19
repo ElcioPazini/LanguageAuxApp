@@ -58,7 +58,17 @@
                             placeholder="Word, translation, or description"
                         />
                     </label>
-                    <span>{{ filteredWords.length }} {{ filteredWords.length === 1 ? 'word' : 'words' }}</span>
+                    <div class="wordsHeaderActions">
+                        <button
+                            class="practiceButton"
+                            type="button"
+                            :disabled="selectedLanguageId === null"
+                            @click="openPractice"
+                        >
+                            Practice
+                        </button>
+                        <span>{{ filteredWords.length }} {{ filteredWords.length === 1 ? 'word' : 'words' }}</span>
+                    </div>
                 </header>
                 
                 <p v-if="selectedLanguageId === null" class="wordsMessage">
@@ -90,6 +100,82 @@
                         </button>
                     </article>
                 </div>
+            </div>
+
+            <div
+                v-if="practiceOpen"
+                class="practiceOverlay"
+                @click.self="closePractice"
+                @keydown.esc="closePractice"
+            >
+                <section
+                    class="practiceModal"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="practiceTitle"
+                >
+                    <header class="practiceHeader">
+                        <div>
+                            <p class="eyebrow">Quick exercise</p>
+                            <span id="practiceTitle">Choose the translation</span>
+                        </div>
+                        <button
+                            class="practiceCloseButton"
+                            type="button"
+                            aria-label="Close practice"
+                            @click="closePractice"
+                        >
+                            &times;
+                        </button>
+                    </header>
+
+                    <template v-if="practiceWord">
+                        <p class="practicePrompt">{{ practiceWord.name }}</p>
+                        <div class="practiceOptions">
+                            <button
+                                v-for="(option, index) in practiceOptions"
+                                :key="option.translation"
+                                class="practiceOption"
+                                :class="{
+                                    correct: practiceAnswered && option.correct,
+                                    incorrect: practiceIncorrectOptions.includes(index)
+                                }"
+                                type="button"
+                                :disabled="practiceAnswered || practiceIncorrectOptions.includes(index)"
+                                @click="choosePracticeOption(index)"
+                            >
+                                {{ option.translation }}
+                            </button>
+                        </div>
+                        <p
+                            v-if="practiceAnswered"
+                            class="practiceFeedback success"
+                            role="status"
+                            aria-live="polite"
+                        >
+                            Correct!
+                        </p>
+                        <p
+                            v-else-if="practiceIncorrectOptions.length > 0"
+                            class="practiceFeedback retry"
+                            role="status"
+                            aria-live="polite"
+                        >
+                            Not quite. Try another option.
+                        </p>
+                        <button
+                            v-if="practiceAnswered"
+                            class="practiceNextButton"
+                            type="button"
+                            @click="nextPracticeWord"
+                        >
+                            Another word
+                        </button>
+                    </template>
+                    <p v-else class="practiceFeedback retry" role="status">
+                        {{ practiceError }}
+                    </p>
+                </section>
             </div>
         </div>
     </body>

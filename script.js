@@ -12,7 +12,13 @@ const app = Vue.createApp({
             newWordTranslation: '',
             newWordDescription: '',
             wordError: '',
-            wordSearchTerm: ''
+            wordSearchTerm: '',
+            practiceOpen: false,
+            practiceWord: null,
+            practiceOptions: [],
+            practiceIncorrectOptions: [],
+            practiceAnswered: false,
+            practiceError: ''
         };
     },
 
@@ -116,6 +122,71 @@ const app = Vue.createApp({
             });
             
             this.getWordsByLanguageId(this.selectedLanguageId);
+        },
+        openPractice(){
+            this.practiceOpen = true;
+            this.nextPracticeWord();
+        },
+        closePractice(){
+            this.practiceOpen = false;
+        },
+        nextPracticeWord(){
+            const availableWords = this.words.filter(word => {
+                return typeof word.translation === 'string' && word.translation.trim();
+            });
+            const distinctTranslations = [...new Set(
+                availableWords.map(word => word.translation.trim())
+            )];
+
+            if (distinctTranslations.length < 4) {
+                this.practiceWord = null;
+                this.practiceOptions = [];
+                this.practiceError = 'Add at least four words with distinct translations to practice this language.';
+                return;
+            }
+
+            const previousWordId = this.practiceWord && this.practiceWord.id;
+            const questionWords = availableWords.filter(word => word.id !== previousWordId);
+            const pool = questionWords.length > 0 ? questionWords : availableWords;
+            const word = pool[Math.floor(Math.random() * pool.length)];
+            const distractors = [...new Set(
+                availableWords
+                    .map(item => item.translation.trim())
+                    .filter(translation => translation !== word.translation.trim())
+            )];
+
+            this.practiceWord = word;
+            this.practiceOptions = this.shufflePracticeOptions([
+                { translation: word.translation.trim(), correct: true },
+                ...this.shufflePracticeOptions(distractors)
+                    .slice(0, 3)
+                    .map(translation => ({ translation, correct: false }))
+            ]);
+            this.practiceIncorrectOptions = [];
+            this.practiceAnswered = false;
+            this.practiceError = '';
+        },
+        shufflePracticeOptions(options){
+            const shuffled = [...options];
+
+            for (let index = shuffled.length - 1; index > 0; index--) {
+                const randomIndex = Math.floor(Math.random() * (index + 1));
+                [shuffled[index], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[index]];
+            }
+
+            return shuffled;
+        },
+        choosePracticeOption(index){
+            if (this.practiceAnswered || this.practiceIncorrectOptions.includes(index)) {
+                return;
+            }
+
+            if (this.practiceOptions[index].correct) {
+                this.practiceAnswered = true;
+                return;
+            }
+
+            this.practiceIncorrectOptions.push(index);
         }
     },
 
